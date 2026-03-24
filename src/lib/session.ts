@@ -114,7 +114,10 @@ export async function getCurrentViewer(): Promise<ViewerContext | null> {
   if (isDemoMode()) {
     return getDemoViewer();
   }
-  return getLiveViewer();
+  // In live mode: try Supabase first, fall back to demo cookie if no Supabase session
+  const liveViewer = await getLiveViewer();
+  if (liveViewer) return liveViewer;
+  return getDemoViewer();
 }
 
 export async function requireViewer() {
