@@ -170,6 +170,48 @@ export function createDemoSubscriber(input: {
   });
 }
 
+export function createDemoAdminAccount(input: {
+  fullName: string;
+  email: string;
+  password: string;
+  role: "subscriber" | "admin";
+}) {
+  return mutateDemoStore((store) => {
+    const existing = store.profiles.find((profile) => profile.email.toLowerCase() === input.email.toLowerCase());
+    if (existing) {
+      throw new Error("An account with that email already exists.");
+    }
+
+    const fallbackCharityId = store.charities.find((charity) => charity.active)?.id ?? "";
+    const id = `${input.role === "admin" ? "admin" : "user"}-${Math.random().toString(36).slice(2, 10)}`;
+    const profile: Profile = {
+      id,
+      fullName: input.fullName,
+      email: input.email.toLowerCase(),
+      role: input.role,
+      selectedCharityId: fallbackCharityId,
+      charityTier: 10,
+      countryCode: "IN",
+      currencyCode: "INR",
+      createdAt: new Date().toISOString(),
+    };
+
+    store.profiles.push(profile);
+    store.demoAccounts.push({ userId: id, password: input.password });
+    store.auditLogs.push({
+      id: `audit-${Math.random().toString(36).slice(2, 10)}`,
+      actorId: id,
+      action: "admin.account-create",
+      targetType: "profile",
+      targetId: id,
+      createdAt: new Date().toISOString(),
+      summary: `Provisioned a ${input.role} account for ${input.email.toLowerCase()}.`,
+    });
+
+    return profile;
+  });
+}
+
 export async function getDashboardSnapshot(viewer: ViewerContext) {
   if (!isDemoMode()) {
     const { getLiveDashboardSnapshot } = await import("@/lib/live-platform");
@@ -234,11 +276,18 @@ export async function getAdminSnapshot() {
       subscription: getSubscription(profile.id),
       scores: getRollingFive(profile.id),
     }));
+  const admins = store.profiles
+    .filter((profile) => profile.role === "admin")
+    .map((profile) => ({
+      profile,
+      account: store.demoAccounts.find((account) => account.userId === profile.id),
+    }));
   const latestDraw = getLatestPublishedDraw();
 
   return {
     kpis,
     users,
+    admins,
     claims,
     latestDraw,
     charities: store.charities,

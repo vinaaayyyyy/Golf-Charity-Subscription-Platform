@@ -8,7 +8,7 @@ export async function updateSupabaseSession(request: NextRequest) {
   });
 
   if (!env.supabaseUrl || !env.supabaseAnonKey) {
-    return response;
+    return { response, user: null as null | { id: string } };
   }
 
   const supabase = createServerClient(env.supabaseUrl, env.supabaseAnonKey, {
@@ -24,6 +24,9 @@ export async function updateSupabaseSession(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getUser();
-  return response;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return { response, user };
 }

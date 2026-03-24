@@ -336,6 +336,11 @@ export async function getLiveAdminSnapshot() {
       subscription: subscriptions.find((s) => s.userId === profile.id),
       scores: getRollingFive(profile.id),
     }));
+  const admins = profiles
+    .filter((profile) => profile.role === "admin")
+    .map((profile) => ({
+      profile,
+    }));
 
   const claims = (claimRows ?? []).map((row) => {
     const claim = mapClaim(row as Record<string, unknown>);
@@ -349,7 +354,7 @@ export async function getLiveAdminSnapshot() {
   const latestDraw = draws[0];
   const audits = (auditRows ?? []).map((r) => mapAudit(r as Record<string, unknown>));
 
-  return { kpis, users, claims, latestDraw, charities, plans, audits };
+  return { kpis, users, admins, claims, latestDraw, charities, plans, audits };
 }
 
 // ---------------------------------------------------------------------------

@@ -6,6 +6,7 @@ import { clearDemoSession, createDemoSession, requireAdmin, requireViewer } from
 import {
   activateDemoSubscription,
   authenticateDemoUser,
+  createDemoAdminAccount,
   createDemoSubscriber,
   deleteUserScore,
   publishMonthlyDraw,
@@ -17,6 +18,7 @@ import {
 } from "@/lib/platform";
 import { isDemoMode } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/server-admin";
 import type { CharityTier, ClaimStatus, DrawMode, FrequencyBias } from "@/lib/types";
 
 function getRequiredString(formData: FormData, key: string) {
@@ -30,11 +32,15 @@ function getRequiredString(formData: FormData, key: string) {
 export async function loginAction(formData: FormData) {
   const email = getRequiredString(formData, "email");
   const password = getRequiredString(formData, "password");
+  const requestedRole = (formData.get("requestedRole") as string | null) ?? "subscriber";
 
   if (isDemoMode()) {
     const profile = authenticateDemoUser(email, password);
     if (!profile) {
-      redirect("/sign-in?error=invalid-credentials");
+      redirect(requestedRole === "admin" ? "/admin/login?error=invalid-credentials" : "/sign-in?error=invalid-credentials");
+    }
+    if (requestedRole === "admin" && profile.role !== "admin") {
+      redirect("/admin/login?error=admin-only-account");
     }
     await createDemoSession(profile);
     redirect(profile.role === "admin" ? "/admin" : "/dashboard");
@@ -61,6 +67,11 @@ export async function loginAction(formData: FormData) {
     .eq("auth_user_id", user!.id)
     .single();
 
+  if (requestedRole === "admin" && profile?.role !== "admin") {
+    await supabase.auth.signOut();
+    redirect("/admin/login?error=admin-only-account");
+  }
+
   redirect(profile?.role === "admin" ? "/admin" : "/dashboard");
 }
 
@@ -86,8 +97,9 @@ export async function signupAction(formData: FormData) {
     redirect("/sign-in?error=signup-failed");
   }
 
-  // Insert profile row linked to auth user
-  await supabase!.from("profiles").insert({
+  // Update or create the profile row linked to auth user. A trigger may already
+  // have created a minimal profile record on auth.users insert.
+  await supabase!.from("profiles").upsert({
     auth_user_id: signUpData.user.id,
     full_name: fullName,
     email: email.toLowerCase(),
@@ -96,13 +108,16 @@ export async function signupAction(formData: FormData) {
     charity_tier: String(charityTier),
     country_code: "IN",
     currency_code: "INR",
-  });
+  }, { onConflict: "auth_user_id" });
 
   redirect("/pricing?welcome=1");
 }
 
 export async function demoSubscriptionAction(formData: FormData) {
   const viewer = await requireViewer();
+  if (!isDemoMode()) {
+    redirect("/pricing?status=reactivate-subscription");
+  }
   activateDemoSubscription(
     viewer.profile.id,
     getRequiredString(formData, "cadence") as "monthly" | "yearly",
@@ -153,8 +168,50 @@ export async function updatePreferencesAction(formData: FormData) {
 export async function submitClaimAction(formData: FormData) {
   const viewer = await requireViewer();
   const proof = formData.get("proof");
+  const drawResultId = getRequiredString(formData, "drawResultId");
+
+  if (!isDemoMode()) {
+    if (!(proof instanceof File) || !proof.name) {
+      redirect("/dashboard?error=proof-required");
+    }
+
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) {
+      redirect("/dashboard?error=upload-failed");
+    }
+
+    const {
+      data: { user },
+    } = await supabase!.auth.getUser();
+
+    if (!user) {
+      redirect("/sign-in");
+    }
+
+    const ext = proof.name.split(".").pop() ?? "png";
+    const proofPath = `${user!.id}/${drawResultId}/proof.${ext}`;
+    const fileBuffer = await proof.arrayBuffer();
+    const { error } = await supabase!.storage.from("winner-proofs").upload(proofPath, fileBuffer, {
+      contentType: proof.type || "application/octet-stream",
+      upsert: true,
+    });
+
+    if (error) {
+      redirect("/dashboard?error=upload-failed");
+    }
+
+    const { submitLiveClaim } = await import("@/lib/live-platform");
+    await submitLiveClaim(viewer.profile.id, {
+      drawResultId,
+      proofPath,
+    });
+
+    revalidatePath("/dashboard");
+    redirect("/dashboard?status=claim-submitted");
+  }
+
   submitWinnerClaim(viewer.profile.id, {
-    drawResultId: getRequiredString(formData, "drawResultId"),
+    drawResultId,
     proofName: proof instanceof File && proof.name ? proof.name : "demo-proof.png",
   });
   revalidatePath("/dashboard");
@@ -243,4 +300,67 @@ export async function adminDeleteUserAction(formData: FormData) {
   });
   revalidatePath("/admin");
   redirect("/admin?status=user-deleted");
+}
+
+export async function adminCreateAccountAction(formData: FormData) {
+  await requireAdmin();
+
+  const fullName = getRequiredString(formData, "fullName");
+  const email = getRequiredString(formData, "email");
+  const password = getRequiredString(formData, "password");
+  const role = getRequiredString(formData, "role") as "subscriber" | "admin";
+
+  if (!isDemoMode()) {
+    const admin = createSupabaseAdminClient();
+    if (!admin) {
+      redirect("/admin?error=admin-client-unavailable");
+    }
+
+    const { data: created, error } = await admin!.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        country_code: "IN",
+        currency_code: "INR",
+      },
+    });
+
+    if (error || !created.user) {
+      redirect("/admin?error=account-create-failed");
+    }
+
+    const supabase = await createSupabaseServerClient();
+    const { data: charity } = await supabase!
+      .from("charities")
+      .select("id")
+      .eq("active", true)
+      .limit(1)
+      .maybeSingle();
+
+    await supabase!.from("profiles").upsert({
+      auth_user_id: created.user.id,
+      full_name: fullName,
+      email: email.toLowerCase(),
+      role,
+      selected_charity_id: charity?.id ?? null,
+      charity_tier: "10",
+      country_code: "IN",
+      currency_code: "INR",
+    }, { onConflict: "auth_user_id" });
+
+    revalidatePath("/admin");
+    redirect("/admin?status=account-created");
+  }
+
+  createDemoAdminAccount({
+    fullName,
+    email,
+    password,
+    role,
+  });
+
+  revalidatePath("/admin");
+  redirect("/admin?status=account-created");
 }
