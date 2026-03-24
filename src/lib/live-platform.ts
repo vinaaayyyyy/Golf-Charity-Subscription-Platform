@@ -413,19 +413,20 @@ export async function saveLiveScore(
   const supabase = await getSupabase();
 
   if (input.id) {
-    await supabase
+    const { error } = await supabase
       .from("score_entries")
       .update({ score: input.score, played_at: input.playedAt })
       .eq("id", input.id)
       .eq("user_id", userId);
+    if (error) throw error;
   } else {
-    await supabase.from("score_entries").insert({
+    const { error } = await supabase.from("score_entries").insert({
       user_id: userId,
       score: input.score,
       played_at: input.playedAt,
     });
+    if (error) throw error;
   }
-  // Trigger enforce_latest_five_scores fires automatically on insert/update
 }
 
 export async function deleteLiveScore(userId: string, scoreId: string) {
@@ -438,10 +439,11 @@ export async function updateLivePreferences(
   input: { charityId: string; charityTier: CharityTier },
 ) {
   const supabase = await getSupabase();
-  await supabase
+  const { error } = await supabase
     .from("profiles")
     .update({ selected_charity_id: input.charityId, charity_tier: String(input.charityTier) })
     .eq("id", userId);
+  if (error) throw error;
 }
 
 // ---------------------------------------------------------------------------
@@ -521,7 +523,7 @@ export async function publishLiveDraw(input: {
   // Get rollover from previous published draw
   const { data: prevDrawRow } = await supabase
     .from("monthly_draws")
-    .select("five_match_pool_cents, month_key")
+    .select("id, five_match_pool_cents, month_key")
     .eq("simulation_only", false)
     .not("published_at", "is", null)
     .order("month_key", { ascending: false })
@@ -533,6 +535,7 @@ export async function publishLiveDraw(input: {
     const { count } = await supabase
       .from("draw_results")
       .select("id", { count: "exact", head: true })
+      .eq("draw_id", prevDrawRow.id as string)
       .eq("tier", "five_match");
     if (!count || count === 0) {
       rolloverFromPreviousCents = (prevDrawRow.five_match_pool_cents as number) ?? 0;

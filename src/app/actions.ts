@@ -143,15 +143,33 @@ export async function logoutAction() {
 
 export async function saveScoreAction(formData: FormData) {
   const viewer = await requireViewer();
+  
+  let success = false;
   try {
+    const scoreId = (formData.get("scoreId") as string) || undefined;
+    
+    // Extract safely instead of throwing in helper
+    const scoreVal = formData.get("score");
+    const playedAtVal = formData.get("playedAt");
+    
+    if (!scoreVal || !playedAtVal) {
+      throw new Error("Missing score or date");
+    }
+
     await saveUserScore(viewer.profile.id, {
-      id: (formData.get("scoreId") as string) || undefined,
-      score: Number(getRequiredString(formData, "score")),
-      playedAt: getRequiredString(formData, "playedAt"),
+      id: scoreId,
+      score: Number(scoreVal),
+      playedAt: String(playedAtVal),
     });
-  } catch {
+    success = true;
+  } catch (error) {
+    console.error("Save score action failed:", error);
+  }
+
+  if (!success) {
     redirect("/dashboard?error=invalid-score");
   }
+
   revalidatePath("/dashboard");
   redirect("/dashboard?status=score-saved");
 }
@@ -159,17 +177,28 @@ export async function saveScoreAction(formData: FormData) {
 export async function deleteScoreAction(formData: FormData) {
   const viewer = await requireViewer();
   const scoreId = getRequiredString(formData, "scoreId");
-  deleteUserScore(viewer.profile.id, scoreId);
+  await deleteUserScore(viewer.profile.id, scoreId);
   revalidatePath("/dashboard");
   redirect("/dashboard?status=score-deleted");
 }
 
 export async function updatePreferencesAction(formData: FormData) {
   const viewer = await requireViewer();
-  updateUserPreferences(viewer.profile.id, {
-    charityId: getRequiredString(formData, "charityId"),
-    charityTier: Number(getRequiredString(formData, "charityTier")) as CharityTier,
-  });
+  let success = false;
+  try {
+    await updateUserPreferences(viewer.profile.id, {
+      charityId: getRequiredString(formData, "charityId"),
+      charityTier: Number(getRequiredString(formData, "charityTier")) as CharityTier,
+    });
+    success = true;
+  } catch (err) {
+    console.error("Failed to update preferences:", err);
+  }
+
+  if (!success) {
+    redirect("/dashboard?error=preferences-failed");
+  }
+
   revalidatePath("/dashboard");
   redirect("/dashboard?status=preferences-saved");
 }
