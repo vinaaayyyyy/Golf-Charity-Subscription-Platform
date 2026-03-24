@@ -1,5 +1,6 @@
 import { seededCurrentMonth } from "@/lib/demo-data";
 import { getDemoStore, mutateDemoStore } from "@/lib/demo-store";
+import { isDemoMode } from "@/lib/env";
 import { simulateDrawSummary } from "@/lib/logic/draws";
 import { buildDashboardKpis } from "@/lib/logic/reports";
 import { sortScoresDescending, upsertUserScore } from "@/lib/logic/scores";
@@ -69,7 +70,11 @@ function getCharityTotalsForMonth(monthKey: string) {
   return [...charityLedger, ...donations].reduce((sum, entry) => sum + entry.amountCents, 0);
 }
 
-export function getHomeSnapshot() {
+export async function getHomeSnapshot() {
+  if (!isDemoMode()) {
+    const { getLiveHomeSnapshot } = await import("@/lib/live-platform");
+    return getLiveHomeSnapshot();
+  }
   const store = getDemoStore();
   const kpis = buildDashboardKpis({
     subscriptions: store.subscriptions,
@@ -83,17 +88,14 @@ export function getHomeSnapshot() {
     ...plan,
     previewPriceCents: getPlanPrice(plan.baseAmountCents, plan.baseCharityPercent),
   }));
-
-  return {
-    featuredCharity,
-    charities: store.charities,
-    plans,
-    kpis,
-    currentMonth: seededCurrentMonth,
-  };
+  return { featuredCharity, charities: store.charities, plans, kpis, currentMonth: seededCurrentMonth };
 }
 
-export function getCharityDirectorySnapshot() {
+export async function getCharityDirectorySnapshot() {
+  if (!isDemoMode()) {
+    const { getLiveCharityDirectory } = await import("@/lib/live-platform");
+    return getLiveCharityDirectory();
+  }
   const store = getDemoStore();
   return {
     charities: store.charities.filter((charity) => charity.active),
@@ -101,16 +103,16 @@ export function getCharityDirectorySnapshot() {
   };
 }
 
-export function getCharityPageSnapshot(slug: string) {
-  const charity = getDemoStore().charities.find((candidate) => candidate.slug === slug);
-  if (!charity) {
-    return null;
+export async function getCharityPageSnapshot(slug: string) {
+  if (!isDemoMode()) {
+    const { getLiveCharityPage } = await import("@/lib/live-platform");
+    return getLiveCharityPage(slug);
   }
-
+  const charity = getDemoStore().charities.find((candidate) => candidate.slug === slug);
+  if (!charity) return null;
   const related = getDemoStore().charities.filter(
     (candidate) => candidate.category === charity.category && candidate.id !== charity.id,
   );
-
   return { charity, related };
 }
 
@@ -168,7 +170,11 @@ export function createDemoSubscriber(input: {
   });
 }
 
-export function getDashboardSnapshot(viewer: ViewerContext) {
+export async function getDashboardSnapshot(viewer: ViewerContext) {
+  if (!isDemoMode()) {
+    const { getLiveDashboardSnapshot } = await import("@/lib/live-platform");
+    return getLiveDashboardSnapshot(viewer);
+  }
   const store = getDemoStore();
   const plan = viewer.subscription
     ? store.plans.find((candidate) => candidate.id === viewer.subscription?.planId)
@@ -201,7 +207,11 @@ export function getDashboardSnapshot(viewer: ViewerContext) {
   };
 }
 
-export function getAdminSnapshot() {
+export async function getAdminSnapshot() {
+  if (!isDemoMode()) {
+    const { getLiveAdminSnapshot } = await import("@/lib/live-platform");
+    return getLiveAdminSnapshot();
+  }
   const store = getDemoStore();
   const kpis = buildDashboardKpis({
     subscriptions: store.subscriptions,
@@ -237,7 +247,11 @@ export function getAdminSnapshot() {
   };
 }
 
-export function saveUserScore(userId: string, input: { score: number; playedAt: string; id?: string }) {
+export async function saveUserScore(userId: string, input: { score: number; playedAt: string; id?: string }) {
+  if (!isDemoMode()) {
+    const { saveLiveScore } = await import("@/lib/live-platform");
+    return saveLiveScore(userId, input);
+  }
   return mutateDemoStore((store) => {
     store.scoreEntries = upsertUserScore(store.scoreEntries, {
       userId,
@@ -258,19 +272,24 @@ export function saveUserScore(userId: string, input: { score: number; playedAt: 
   });
 }
 
-export function deleteUserScore(userId: string, scoreId: string) {
+export async function deleteUserScore(userId: string, scoreId: string) {
+  if (!isDemoMode()) {
+    const { deleteLiveScore } = await import("@/lib/live-platform");
+    return deleteLiveScore(userId, scoreId);
+  }
   return mutateDemoStore((store) => {
     store.scoreEntries = store.scoreEntries.filter((entry) => !(entry.userId === userId && entry.id === scoreId));
   });
 }
 
-export function updateUserPreferences(userId: string, input: { charityId: string; charityTier: CharityTier }) {
+export async function updateUserPreferences(userId: string, input: { charityId: string; charityTier: CharityTier }) {
+  if (!isDemoMode()) {
+    const { updateLivePreferences } = await import("@/lib/live-platform");
+    return updateLivePreferences(userId, input);
+  }
   return mutateDemoStore((store) => {
     const profile = store.profiles.find((candidate) => candidate.id === userId);
-    if (!profile) {
-      throw new Error("Profile not found.");
-    }
-
+    if (!profile) throw new Error("Profile not found.");
     profile.selectedCharityId = input.charityId;
     profile.charityTier = input.charityTier;
   });
@@ -575,7 +594,11 @@ export function getAvailablePlanCards() {
   }));
 }
 
-export function getAvailableCharities(): Charity[] {
+export async function getAvailableCharities(): Promise<Charity[]> {
+  if (!isDemoMode()) {
+    const { getLiveAvailableCharities } = await import("@/lib/live-platform");
+    return getLiveAvailableCharities();
+  }
   return getDemoStore().charities.filter((charity) => charity.active);
 }
 

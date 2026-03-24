@@ -10,7 +10,7 @@ import { formatCurrency } from "@/lib/utils";
 export default async function PricingPage() {
   const viewer = await getCurrentViewer();
   const plans = getAvailablePlanCards();
-  const charities = getAvailableCharities();
+  const charities = await getAvailableCharities();
 
   return (
     <div className="section-shell space-y-10 py-14 md:py-20">

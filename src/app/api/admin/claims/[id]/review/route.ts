@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentViewer } from "@/lib/session";
 import { reviewWinnerClaim } from "@/lib/platform";
+import { isDemoMode } from "@/lib/env";
 import type { ClaimStatus } from "@/lib/types";
 
 export async function POST(
@@ -16,6 +17,17 @@ export async function POST(
   const body = await request.json().catch(() => ({}));
 
   try {
+    if (!isDemoMode()) {
+      const { reviewLiveClaim } = await import("@/lib/live-platform");
+      await reviewLiveClaim({
+        actorId: viewer.profile.id,
+        claimId: id,
+        status: (body.status as ClaimStatus) ?? "approved",
+        note: typeof body.note === "string" ? body.note : undefined,
+      });
+      return NextResponse.json({ success: true });
+    }
+
     const claim = await reviewWinnerClaim({
       actorId: viewer.profile.id,
       claimId: id,

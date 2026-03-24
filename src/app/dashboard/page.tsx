@@ -21,8 +21,8 @@ export default async function DashboardPage() {
     notFound();
   }
 
-  const snapshot = getDashboardSnapshot(viewer);
-  const charities = getAvailableCharities();
+  const snapshot = await getDashboardSnapshot(viewer);
+  const charities = await getAvailableCharities();
 
   return (
     <div className="section-shell space-y-8 py-14 md:py-20">

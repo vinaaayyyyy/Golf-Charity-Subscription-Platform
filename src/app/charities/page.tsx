@@ -2,8 +2,8 @@ import { CharityDirectory } from "@/components/charity-directory";
 import { SectionHeading } from "@/components/section-heading";
 import { getCharityDirectorySnapshot } from "@/lib/platform";
 
-export default function CharitiesPage() {
-  const snapshot = getCharityDirectorySnapshot();
+export default async function CharitiesPage() {
+  const snapshot = await getCharityDirectorySnapshot();
 
   return (
     <div className="section-shell space-y-10 py-14 md:py-20">

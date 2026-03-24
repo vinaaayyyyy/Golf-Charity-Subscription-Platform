@@ -17,7 +17,6 @@ import {
 } from "@/lib/platform";
 import { isDemoMode } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { createSupabaseAdminClient } from "@/lib/supabase/server-admin";
 import type { CharityTier, ClaimStatus, DrawMode, FrequencyBias } from "@/lib/types";
 
 function getRequiredString(formData: FormData, key: string) {
@@ -164,6 +163,17 @@ export async function submitClaimAction(formData: FormData) {
 
 export async function publishDrawAction(formData: FormData) {
   const viewer = await requireAdmin();
+  if (!isDemoMode()) {
+    const { publishLiveDraw } = await import("@/lib/live-platform");
+    await publishLiveDraw({
+      actorId: viewer.profile.id,
+      monthKey: getRequiredString(formData, "monthKey"),
+      mode: getRequiredString(formData, "mode") as DrawMode,
+      bias: (formData.get("bias") as FrequencyBias | null) ?? undefined,
+    });
+    revalidatePath("/admin");
+    redirect("/admin?status=draw-published");
+  }
   publishMonthlyDraw({
     actorId: viewer.profile.id,
     monthKey: getRequiredString(formData, "monthKey"),
@@ -176,6 +186,18 @@ export async function publishDrawAction(formData: FormData) {
 
 export async function reviewClaimAction(formData: FormData) {
   const viewer = await requireAdmin();
+  if (!isDemoMode()) {
+    const { reviewLiveClaim } = await import("@/lib/live-platform");
+    await reviewLiveClaim({
+      actorId: viewer.profile.id,
+      claimId: getRequiredString(formData, "claimId"),
+      status: getRequiredString(formData, "status") as ClaimStatus,
+      note: (formData.get("note") as string) || undefined,
+    });
+    revalidatePath("/admin");
+    revalidatePath("/dashboard");
+    redirect("/admin?status=claim-reviewed");
+  }
   await reviewWinnerClaim({
     actorId: viewer.profile.id,
     claimId: getRequiredString(formData, "claimId"),
@@ -189,6 +211,12 @@ export async function reviewClaimAction(formData: FormData) {
 
 export async function adminResyncSubscriptionAction(formData: FormData) {
   await requireAdmin();
+  if (!isDemoMode()) {
+    const { resyncLiveSubscription } = await import("@/lib/live-platform");
+    await resyncLiveSubscription(getRequiredString(formData, "subscriptionId"));
+    revalidatePath("/admin");
+    redirect("/admin?status=subscription-resynced");
+  }
   resyncSubscription(getRequiredString(formData, "subscriptionId"));
   revalidatePath("/admin");
   redirect("/admin?status=subscription-resynced");
@@ -198,43 +226,21 @@ export async function adminDeleteUserAction(formData: FormData) {
   await requireAdmin();
   const profileId = getRequiredString(formData, "profileId");
 
-  if (isDemoMode()) {
-    // Remove from in-memory demo store
-    const { mutateDemoStore } = await import("@/lib/demo-store");
-    mutateDemoStore((store) => {
-      store.profiles = store.profiles.filter((p) => p.id !== profileId);
-      store.subscriptions = store.subscriptions.filter((s) => s.userId !== profileId);
-      store.scoreEntries = store.scoreEntries.filter((s) => s.userId !== profileId);
-      store.demoAccounts = store.demoAccounts.filter((a) => a.userId !== profileId);
-    });
+  if (!isDemoMode()) {
+    const { deleteLiveUser } = await import("@/lib/live-platform");
+    await deleteLiveUser(profileId);
     revalidatePath("/admin");
     redirect("/admin?status=user-deleted");
   }
 
-  // Live mode: delete from Supabase
-  const supabase = await createSupabaseServerClient();
-  const admin = createSupabaseAdminClient();
-
-  if (!supabase || !admin) {
-    redirect("/admin?error=server-error");
-  }
-
-  // Get the auth_user_id from profiles first
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("auth_user_id")
-    .eq("id", profileId)
-    .single();
-
-  // Delete profile row (cascades on subscriptions/scores via DB FK if configured,
-  // otherwise handled by RLS + manual cleanup)
-  await supabase.from("profiles").delete().eq("id", profileId);
-
-  // Delete from Supabase Auth (requires service role)
-  if (profile?.auth_user_id) {
-    await admin.auth.admin.deleteUser(profile.auth_user_id);
-  }
-
+  // Demo mode: remove from in-memory store
+  const { mutateDemoStore } = await import("@/lib/demo-store");
+  mutateDemoStore((store) => {
+    store.profiles = store.profiles.filter((p) => p.id !== profileId);
+    store.subscriptions = store.subscriptions.filter((s) => s.userId !== profileId);
+    store.scoreEntries = store.scoreEntries.filter((s) => s.userId !== profileId);
+    store.demoAccounts = store.demoAccounts.filter((a) => a.userId !== profileId);
+  });
   revalidatePath("/admin");
   redirect("/admin?status=user-deleted");
 }

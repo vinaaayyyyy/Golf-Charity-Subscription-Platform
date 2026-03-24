@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentViewer } from "@/lib/session";
 import { publishMonthlyDraw } from "@/lib/platform";
+import { isDemoMode } from "@/lib/env";
 import type { DrawMode, FrequencyBias } from "@/lib/types";
 
 export async function POST(
@@ -16,6 +17,17 @@ export async function POST(
   const body = await request.json().catch(() => ({}));
 
   try {
+    if (!isDemoMode()) {
+      const { publishLiveDraw } = await import("@/lib/live-platform");
+      const result = await publishLiveDraw({
+        actorId: viewer.profile.id,
+        monthKey: month,
+        mode: (body.mode as DrawMode) ?? "algorithmic",
+        bias: (body.bias as FrequencyBias) ?? "most_frequent",
+      });
+      return NextResponse.json(result);
+    }
+
     const result = publishMonthlyDraw({
       actorId: viewer.profile.id,
       monthKey: month,

@@ -7,8 +7,8 @@ import { Card } from "@/components/ui/card";
 import { getHomeSnapshot } from "@/lib/platform";
 import { formatCurrency, formatMonthLabel } from "@/lib/utils";
 
-export default function Home() {
-  const snapshot = getHomeSnapshot();
+export default async function Home() {
+  const snapshot = await getHomeSnapshot();
 
   return (
     <div className="pb-20">

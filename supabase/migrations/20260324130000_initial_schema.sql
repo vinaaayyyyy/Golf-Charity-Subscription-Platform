@@ -1,5 +1,42 @@
 create extension if not exists pgcrypto;
 
+-- Drop existing tables so you can safely re-run this script
+drop table if exists public.audit_logs cascade;
+drop table if exists public.payout_ledger cascade;
+drop table if exists public.donation_ledger cascade;
+drop table if exists public.charity_ledger cascade;
+drop table if exists public.winner_claims cascade;
+drop table if exists public.draw_results cascade;
+drop table if exists public.monthly_draws cascade;
+drop table if exists public.score_entries cascade;
+drop table if exists public.subscriptions cascade;
+drop table if exists public.profiles cascade;
+drop table if exists public.plans cascade;
+drop table if exists public.charity_events cascade;
+drop table if exists public.charities cascade;
+drop table if exists public.campaigns cascade;
+drop table if exists public.organizations cascade;
+
+-- Drop existing types
+drop type if exists public.payout_status cascade;
+drop type if exists public.ledger_source cascade;
+drop type if exists public.claim_status cascade;
+drop type if exists public.draw_tier cascade;
+drop type if exists public.frequency_bias cascade;
+drop type if exists public.draw_mode cascade;
+drop type if exists public.charity_tier cascade;
+drop type if exists public.plan_cadence cascade;
+drop type if exists public.subscription_status cascade;
+drop type if exists public.app_role cascade;
+
+-- Drop functions and triggers attached to tables we don't drop (like auth.users)
+drop trigger if exists on_auth_user_created on auth.users;
+drop function if exists public.handle_new_user cascade;
+drop function if exists public.set_updated_at cascade;
+drop function if exists public.enforce_rolling_scores cascade;
+drop function if exists public.update_charity_total cascade;
+
+
 create type public.app_role as enum ('subscriber', 'admin');
 create type public.subscription_status as enum ('active', 'trialing', 'past_due', 'canceled', 'inactive', 'unpaid');
 create type public.plan_cadence as enum ('monthly', 'yearly');
@@ -518,6 +555,10 @@ create policy "draws admin write"
 on public.monthly_draws for all
 using (public.is_admin())
 with check (public.is_admin());
+drop policy if exists "winner proof upload by owner or admin" on storage.objects;
+drop policy if exists "winner proof read by owner or admin" on storage.objects;
+drop policy if exists "winner proof update by admin" on storage.objects;
+drop policy if exists "winner proof delete by admin" on storage.objects;
 
 insert into storage.buckets (id, name, public)
 values ('winner-proofs', 'winner-proofs', false)

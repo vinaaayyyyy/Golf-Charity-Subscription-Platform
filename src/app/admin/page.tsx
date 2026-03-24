@@ -12,7 +12,7 @@ export default async function AdminPage({
 }) {
   const viewer = await requireAdmin();
   const params = await searchParams;
-  const snapshot = getAdminSnapshot();
+  const snapshot = await getAdminSnapshot();
   const preview =
     params.preview === "1"
       ? simulateMonthlyDraw({
