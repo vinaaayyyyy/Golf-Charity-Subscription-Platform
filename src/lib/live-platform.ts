@@ -815,7 +815,20 @@ export async function getLiveHomeSnapshot() {
     claims: [],
   });
 
-  const featuredCharity = charities.find((c) => c.featured) ?? charities[0];
+  const featuredCharity = charities.find((c) => c.featured) ?? charities[0] ?? {
+    id: "empty",
+    slug: "empty",
+    name: "No charities found",
+    category: "System",
+    impactTag: "Awaiting database seed",
+    description: "Please run the seed script in your Supabase SQL editor to populate charities.",
+    mission: "",
+    featured: false,
+    images: [],
+    upcomingEvents: [],
+    totalRaisedCents: 0,
+    active: false,
+  };
   const plansWithPrices = plans.map((plan) => ({
     ...plan,
     previewPriceCents: getPlanPrice(plan.baseAmountCents, plan.baseCharityPercent),
