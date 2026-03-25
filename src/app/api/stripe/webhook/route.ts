@@ -132,7 +132,7 @@ export async function POST(request: Request) {
             .select("user_id, profiles(email, full_name)")
             .eq("stripe_subscription_id", invoice.subscription)
             .single();
-          const profile = sub?.profiles as { email: string; full_name: string } | null;
+          const profile = sub?.profiles as unknown as { email: string; full_name: string } | null;
           if (profile) {
             await sendTransactionalEmail({
               to: profile.email,
@@ -157,7 +157,7 @@ export async function POST(request: Request) {
             .select("user_id, profiles(email, full_name)")
             .eq("stripe_subscription_id", invoice.subscription)
             .single();
-          const profile = sub?.profiles as { email: string; full_name: string } | null;
+          const profile = sub?.profiles as unknown as { email: string; full_name: string } | null;
           if (profile) {
             await sendTransactionalEmail({
               to: profile.email,
