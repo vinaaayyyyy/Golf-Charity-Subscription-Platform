@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good Drive Club | Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="app-body" data-page-role="admin">
+    <div class="dashboard-shell">
+      <aside class="sidebar glass">
+        <a class="brand sidebar-brand" href="./index.html">
+          <span class="brand-mark">GD</span>
+          <span>
+            <strong>Admin Dashboard</strong>
+            <small>Operations control room</small>
+          </span>
+        </a>
+
+        <nav class="sidebar-nav">
+          <a class="is-current" href="./admin-dashboard.html">Overview</a>
+          <a href="./admin-dashboard.html">Draw management</a>
+          <a href="./admin-dashboard.html">Claims</a>
+          <a href="./admin-dashboard.html">Members</a>
+          <a href="./admin-dashboard.html">Charities</a>
+          <a href="./auth.html" data-logout>Logout</a>
+        </nav>
+      </aside>
+
+      <main class="dashboard-main">
+        <header class="dashboard-header glass">
+          <div>
+            <p class="eyebrow">Admin dashboard</p>
+            <h1>Operations at a glance.</h1>
+            <p class="hero-text">Monitor platform health, run draw simulations, publish results, and review winner claims.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <a class="button button-ghost" href="./index.html">Back to landing</a>
+            <a class="button button-primary" href="./auth.html">Switch account</a>
+          </div>
+        </header>
+
+        <section class="dashboard-grid app-kpis">
+          <article class="metric-card glass">
+            <span>Total users</span>
+            <strong id="adminTotalUsersValue">1,284</strong>
+            <small id="adminUsersMeta">43 past due · +8.4% vs last month</small>
+          </article>
+          <article class="metric-card glass">
+            <span>Total prize pool</span>
+            <strong id="adminPrizePoolValue">₹1,34,000</strong>
+            <small id="adminPrizePoolMeta">Published month total</small>
+          </article>
+          <article class="metric-card glass">
+            <span>Charity contribution totals</span>
+            <strong id="adminCharityTotalValue">₹82,700</strong>
+            <small id="adminCharityMeta">Current month allocation</small>
+          </article>
+        </section>
+
+        <section class="app-grid-two">
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>User management</h3>
+              <span class="badge badge-gold">Admin control</span>
+            </div>
+            <div class="table-list">
+              <div><span>View and edit user profiles</span><strong>Enabled</strong></div>
+              <div><span>Edit golf scores</span><strong>Enabled</strong></div>
+              <div><span>Manage subscriptions</span><strong>Enabled</strong></div>
+            </div>
+            <div class="action-row">
+              <button class="button button-primary button-small" id="openProfilesButton" type="button">Open profiles</button>
+              <button class="button button-ghost button-small" id="manageSubscriptionsButton" type="button">Manage subscriptions</button>
+            </div>
+            <div class="inline-feedback" id="adminUserFeedback">User management actions will appear here.</div>
+          </article>
+
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Draw management</h3>
+              <span class="badge badge-dark">Simulation mode</span>
+            </div>
+            <div class="control-stack">
+              <label class="control-label" for="drawLogicSelect">
+                Draw logic mode
+                <select id="drawLogicSelect">
+                  <option value="random">Random</option>
+                  <option value="algorithmic">Algorithmic</option>
+                </select>
+              </label>
+            </div>
+            <div class="score-balls large" id="adminDrawNumbers">
+              <span>12</span>
+              <span>18</span>
+              <span>23</span>
+              <span>31</span>
+              <span>44</span>
+            </div>
+            <div class="table-list">
+              <div><span>Configure draw logic</span><strong>Random vs algorithm</strong></div>
+              <div><span>Run simulations</span><strong>Available</strong></div>
+              <div><span>Publish results</span><strong>Ready</strong></div>
+              <div><span>5-match rollover</span><strong>Carry to next month if unwon</strong></div>
+            </div>
+            <div class="action-row">
+              <button class="button button-primary button-small" id="runSimulationButton" type="button">Run simulation</button>
+              <button class="button button-dark button-small" id="publishDrawButton" type="button">Publish draw</button>
+            </div>
+            <div class="inline-feedback" id="drawFeedback">Simulation and publish updates will appear here.</div>
+          </article>
+        </section>
+
+        <section class="app-grid-two">
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Charity management</h3>
+              <span class="status-dot">Healthy</span>
+            </div>
+            <div class="table-list">
+              <div><span>Add, edit, delete charities</span><strong>Enabled</strong></div>
+              <div><span>Manage content and media</span><strong>Enabled</strong></div>
+              <div><span>Live listings</span><strong>3 active</strong></div>
+            </div>
+            <div class="action-row">
+              <button class="button button-ghost button-small" id="editCharitiesButton" type="button">Edit charity listings</button>
+              <button class="button button-primary button-small" id="manageMediaButton" type="button">Manage media</button>
+            </div>
+            <div class="inline-feedback" id="adminCharityFeedback">Charity management actions will appear here.</div>
+          </article>
+
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Winners management</h3>
+              <span class="status-dot pending">Needs action</span>
+            </div>
+            <div class="review-list">
+              <div><span>View full winners list</span><strong>February loaded</strong></div>
+              <div><span>Verify submissions</span><strong>3 pending</strong></div>
+              <div><span>Mark payouts as completed</span><strong>1 in process</strong></div>
+            </div>
+            <div class="action-row">
+              <button class="button button-primary button-small" id="approveProofButton" type="button">Approve proof</button>
+              <button class="button button-ghost button-small" id="rejectProofButton" type="button">Reject proof</button>
+              <button class="button button-dark button-small" id="markPaidButton" type="button">Mark as paid</button>
+            </div>
+            <div class="inline-feedback" id="winnersFeedback">Winner verification updates will appear here.</div>
+          </article>
+        </section>
+
+        <section class="detail-card glass admin-report-card">
+          <div class="detail-head">
+            <h3>Reports and analytics</h3>
+            <span class="badge badge-dark">Executive view</span>
+          </div>
+          <div class="report-grid">
+            <div><span>Total users</span><strong>1,284</strong></div>
+            <div><span>Total prize pool</span><strong>₹1,34,000</strong></div>
+            <div><span>Charity contribution totals</span><strong>₹82,700</strong></div>
+            <div><span>Draw statistics</span><strong>7 simulations · 1 published</strong></div>
+          </div>
+          <div class="action-row">
+            <button class="button button-ghost button-small">Export report</button>
+            <button class="button button-primary button-small">Open analytics</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

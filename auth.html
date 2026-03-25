@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good Drive Club | Role Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="app-body" data-page-role="public">
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="./index.html">
+          <span class="brand-mark">GD</span>
+          <span>
+            <strong>Good Drive Club</strong>
+            <small>Role-based access</small>
+          </span>
+        </a>
+        <nav class="site-nav always-open">
+          <a href="./index.html">Landing page</a>
+          <a href="./user-dashboard.html">User preview</a>
+          <a href="./admin-dashboard.html">Admin preview</a>
+        </nav>
+      </header>
+
+      <main class="app-layout auth-layout">
+        <section class="auth-hero glass">
+          <p class="eyebrow">Authentication</p>
+          <h1>Continue as a registered subscriber or administrator.</h1>
+          <p class="hero-text">
+            The site opens publicly by default. Once someone logs in or signs up, this screen routes them into the
+            correct private experience based on role.
+          </p>
+
+          <div class="role-cards">
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Subscriber</span>
+              <h3>Registered subscriber</h3>
+              <p>Profile, scores, charity selection, participation, winnings, and proof upload.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-dark">Admin</span>
+              <h3>Administrator</h3>
+              <p>Users, subscriptions, draws, charity listings, winner verification, and analytics.</p>
+            </article>
+          </div>
+
+          <div class="auth-access-note">
+            Public visitors can browse the platform without authentication, but score entry, draw participation, payout tracking, and admin tooling remain restricted until role-based login is complete.
+          </div>
+        </section>
+
+        <section class="auth-card glass">
+          <div class="toggle-row auth-mode-switch">
+            <button class="toggle-button is-active" data-auth-mode="login">Login</button>
+            <button class="toggle-button" data-auth-mode="signup">Sign up</button>
+          </div>
+
+          <form id="authForm" class="auth-form">
+            <label>
+              Full name
+              <input type="text" name="name" placeholder="Samira Khan" data-signup-field />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" placeholder="player@gooddrive.club" required />
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" placeholder="••••••••" required />
+            </label>
+            <label>
+              Continue as
+              <select name="role" id="roleSelect">
+                <option value="user">Registered Subscriber</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </label>
+
+            <div class="auth-hint" id="authHint">
+              Login as a registered subscriber to open the subscriber dashboard.
+            </div>
+
+            <div class="demo-credentials">
+              <div class="demo-cred-card">
+                <strong>Subscriber demo</strong>
+                <span>`player@gooddrive.club`</span>
+                <span>`Player@2026`</span>
+                <button class="button button-ghost button-small" type="button" data-fill-credentials="subscriber">Use subscriber creds</button>
+              </div>
+              <div class="demo-cred-card">
+                <strong>Admin demo</strong>
+                <span>`admin@gooddrive.club`</span>
+                <span>`Admin@2026`</span>
+                <button class="button button-ghost button-small" type="button" data-fill-credentials="admin">Use admin creds</button>
+              </div>
+            </div>
+
+            <button class="button button-primary auth-submit" type="submit">Continue</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

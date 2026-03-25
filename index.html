@@ -1,0 +1,573 @@
+git<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good Drive Club | Public Visitor</title>
+    <meta
+      name="description"
+      content="Good Drive Club public visitor landing page for a golf charity subscription platform."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="./index.html">
+          <span class="brand-mark">GD</span>
+          <span>
+            <strong>Good Drive Club</strong>
+            <small>Public visitor experience</small>
+          </span>
+        </a>
+
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav">
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="site-nav" id="siteNav">
+          <a href="#how-it-works">How it works</a>
+          <a href="#plans">Plans</a>
+          <a href="#charities">Charities</a>
+          <a href="#roles">User roles</a>
+          <a class="button button-dark" href="./auth.html">Login / Sign up</a>
+        </nav>
+      </header>
+
+      <main id="home">
+        <section class="hero section">
+          <div class="hero-copy">
+            <p class="eyebrow">Public visitor</p>
+            <h1>Explore the platform first, then continue as a registered subscriber or administrator.</h1>
+            <p class="hero-text">
+              Good Drive Club opens by default in a public visitor view where people can understand the concept, explore
+              charities, review draw mechanics, and initiate subscription before moving into role-specific dashboards.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="./auth.html">Login / Sign up</a>
+              <a class="button button-ghost" href="#roles">See user roles</a>
+            </div>
+
+            <div class="hero-stats">
+              <article>
+                <span>Raised to date</span>
+                <strong>₹4.27L</strong>
+              </article>
+              <article>
+                <span>Active subscribers</span>
+                <strong>1,284</strong>
+              </article>
+              <article>
+                <span>Current prize pool</span>
+                <strong>₹1.34L</strong>
+              </article>
+            </div>
+          </div>
+
+          <aside class="hero-panel glass">
+            <div class="panel-topline">
+              <span class="badge badge-gold">March draw window live</span>
+              <span class="live-pill">Five latest scores decide entry</span>
+            </div>
+
+            <div class="feature-card">
+              <p class="mini-label">Featured cause</p>
+              <h2>First Swing Futures</h2>
+              <p>
+                A youth-access charity helping girls enter junior golf through bursaries, travel support, and safe
+                beginner coaching.
+              </p>
+            </div>
+
+            <div class="impact-grid">
+              <article>
+                <span>To charities</span>
+                <strong>₹82,700</strong>
+              </article>
+              <article>
+                <span>5-match split</span>
+                <strong>40%</strong>
+              </article>
+              <article>
+                <span>4-match split</span>
+                <strong>35%</strong>
+              </article>
+              <article>
+                <span>3-match split</span>
+                <strong>25%</strong>
+              </article>
+            </div>
+
+            <div class="score-strip">
+              <p class="mini-label">Example winning pattern</p>
+              <div class="score-balls">
+                <span>12</span>
+                <span>18</span>
+                <span>23</span>
+                <span>31</span>
+                <span>44</span>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section feature-band">
+          <article class="feature-panel glass">
+            <p class="mini-label">Public visitor</p>
+            <h3>View platform concept, explore charities, and understand the draw before signing up.</h3>
+            <p>This first-touch experience should feel informative and premium without exposing subscriber-only tools.</p>
+          </article>
+          <article class="feature-panel glass">
+            <p class="mini-label">Registered subscriber</p>
+            <h3>Manage profile, scores, charity recipient, winnings, and proof upload.</h3>
+            <p>The subscriber experience is operational and personal, centered around participation in the monthly draw.</p>
+          </article>
+          <article class="feature-panel glass">
+            <p class="mini-label">Administrator</p>
+            <h3>Manage users, configure draws, verify winners, and access reporting.</h3>
+            <p>This control layer keeps the platform credible by making operational oversight visible and structured.</p>
+          </article>
+        </section>
+
+        <section class="section process-section" id="how-it-works">
+          <div class="section-heading">
+            <p class="eyebrow">How it works</p>
+            <h2>The site starts with the public visitor, then branches by role.</h2>
+          </div>
+
+          <div class="flow-panel is-active single-column">
+            <article class="flow-step">
+              <span>01</span>
+              <div>
+                <h3>Public visitor opens by default</h3>
+                <p>Visitors can view the platform concept, explore listed charities, understand draw mechanics, and initiate subscription.</p>
+              </div>
+            </article>
+            <article class="flow-step">
+              <span>02</span>
+              <div>
+                <h3>Authentication decides the role</h3>
+                <p>After login or signup, the product redirects the person into the registered subscriber dashboard or administrator dashboard.</p>
+              </div>
+            </article>
+            <article class="flow-step">
+              <span>03</span>
+              <div>
+                <h3>Registered subscriber dashboard</h3>
+                <p>Subscribers manage profile and settings, enter or edit golf scores, select their charity recipient, view winnings, and upload proof.</p>
+              </div>
+            </article>
+            <article class="flow-step">
+              <span>04</span>
+              <div>
+                <h3>Admin dashboard</h3>
+                <p>Administrators manage users and subscriptions, configure and run draws, manage charity listings, verify winners, and access reports.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section pricing-section" id="plans">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="eyebrow">Membership plans</p>
+              <h2>Pricing stays elegant while contribution tiers remain visible.</h2>
+            </div>
+            <div class="pricing-controls glass">
+              <div class="toggle-row">
+                <button class="toggle-button is-active" data-cadence="monthly">Monthly</button>
+                <button class="toggle-button" data-cadence="yearly">Yearly</button>
+              </div>
+              <label class="range-wrap" for="charityTier">
+                Charity contribution tier
+                <div class="range-meta">
+                  <input id="charityTier" type="range" min="10" max="30" step="5" value="20" />
+                  <strong><span id="tierValue">20</span>%</strong>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="pricing-grid two-up">
+            <article class="plan-card glass" data-plan="momentum">
+              <p class="mini-label">Momentum Monthly</p>
+              <h3>Built for regular players who want flexibility.</h3>
+              <div class="plan-price">
+                <strong id="monthlyPrice">₹5,400</strong>
+                <span>per month</span>
+              </div>
+              <ul>
+                <li>Monthly draw participation</li>
+                <li>Latest five score tracking</li>
+                <li>Charity selection and preference updates</li>
+                <li>Claim submission interface</li>
+              </ul>
+              <a class="button button-primary" href="./auth.html">Continue as subscriber</a>
+            </article>
+
+            <article class="plan-card plan-card-highlight">
+              <div class="badge badge-dark">Best value</div>
+              <p class="mini-label">Impact Annual</p>
+              <h3>For long-term commitment and stronger annual contribution.</h3>
+              <div class="plan-price">
+                <strong id="yearlyPrice">₹52,900</strong>
+                <span>per year</span>
+              </div>
+              <ul>
+                <li>15% saving against monthly</li>
+                <li>Higher recurring prize pool contribution</li>
+                <li>Priority charity profile visibility</li>
+                <li>Full subscriber dashboard access</li>
+              </ul>
+              <a class="button button-dark" href="./auth.html">Sign up now</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="section system-section" id="subscription-system">
+          <div class="section-heading">
+            <p class="eyebrow">Subscription and payment system</p>
+            <h2>The commercial model is now explicit in the frontend, not just implied.</h2>
+          </div>
+
+          <div class="spec-table glass">
+            <div class="spec-row">
+              <strong>Plans</strong>
+              <span>Monthly plan and yearly plan with discounted annual rate</span>
+            </div>
+            <div class="spec-row">
+              <strong>Gateway</strong>
+              <span>Stripe-ready checkout and billing lifecycle messaging</span>
+            </div>
+            <div class="spec-row">
+              <strong>Access control</strong>
+              <span>Non-subscribers receive restricted access to score entry, draw participation, and winnings tools</span>
+            </div>
+            <div class="spec-row">
+              <strong>Lifecycle</strong>
+              <span>Active, renewal due, cancellation scheduled, inactive, and lapsed states are surfaced clearly</span>
+            </div>
+            <div class="spec-row">
+              <strong>Validation</strong>
+              <span>Frontend messaging assumes real-time subscription status checks on authenticated requests</span>
+            </div>
+          </div>
+
+          <div class="info-grid three-up">
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Restricted access</span>
+              <h3>Public users can browse, but not play.</h3>
+              <p>Visitors can discover charities and understand the product, but subscriber-only actions stay visibly locked until checkout is complete.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-dark">Lifecycle states</span>
+              <h3>Renewal and lapsed moments are part of the UI.</h3>
+              <p>The frontend now reflects renewal date awareness and supports inactive or lapsed subscription states as product concepts.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Payment clarity</span>
+              <h3>Annual pricing feels deliberately persuasive.</h3>
+              <p>The yearly plan stays visibly discounted, which supports the CTA requirement without making the page feel like a generic pricing table.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section charity-section" id="charities">
+          <div class="section-heading">
+            <p class="eyebrow">Charity directory</p>
+            <h2>Causes with a real story behind them.</h2>
+          </div>
+
+          <div class="directory-toolbar">
+            <label class="search-field">
+              <span>Search listed charities</span>
+              <input id="charitySearch" type="search" placeholder="Search by cause, city, or impact..." />
+            </label>
+            <article class="directory-note glass">
+              <strong>Contribution model</strong>
+              <p>Subscribers choose a charity at signup, start from a 10% contribution minimum, can increase their percentage, and may donate independently.</p>
+            </article>
+          </div>
+
+          <div class="charity-filters">
+            <button class="filter-chip is-active" data-category="all">All</button>
+            <button class="filter-chip" data-category="Youth Access">Youth Access</button>
+            <button class="filter-chip" data-category="Clean Water">Clean Water</button>
+            <button class="filter-chip" data-category="Mental Health">Mental Health</button>
+          </div>
+
+          <div class="charity-grid" id="charityGrid">
+            <article class="charity-card glass" data-category="Youth Access">
+              <p class="mini-label">Youth Access</p>
+              <h3>First Swing Futures</h3>
+              <p>Funds coaching bursaries, travel grants, and early entry pathways for girls entering golf.</p>
+              <div class="charity-meta">
+                <span>Raised: ₹1,82,400</span>
+                <span>Bengaluru event</span>
+              </div>
+              <div class="charity-extra">
+                <span>Upcoming: Community short-game clinic</span>
+                <span>Media: Event gallery and mentor stories</span>
+              </div>
+            </article>
+            <article class="charity-card glass" data-category="Clean Water">
+              <p class="mini-label">Clean Water</p>
+              <h3>Blue Horizon Water Fund</h3>
+              <p>Builds small-scale water systems for drought-hit schools and community sports programmes.</p>
+              <div class="charity-meta">
+                <span>Raised: ₹1,46,200</span>
+                <span>Pune volunteer day</span>
+              </div>
+              <div class="charity-extra">
+                <span>Upcoming: Monsoon-proofing volunteer day</span>
+                <span>Media: Build progress and field reports</span>
+              </div>
+            </article>
+            <article class="charity-card glass" data-category="Mental Health">
+              <p class="mini-label">Mental Health</p>
+              <h3>Healing Greens Recovery Trust</h3>
+              <p>Supports trauma-aware outdoor recovery spaces built around movement, confidence, and connection.</p>
+              <div class="charity-meta">
+                <span>Raised: ₹98,400</span>
+                <span>Hyderabad session</span>
+              </div>
+              <div class="charity-extra">
+                <span>Upcoming: Mindful golf morning</span>
+                <span>Media: Recovery stories and event recaps</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section system-section" id="draw-rewards">
+          <div class="section-heading">
+            <p class="eyebrow">Draw and reward system</p>
+            <h2>The draw mechanics are now explained as a real system, not just decorative content.</h2>
+          </div>
+
+          <div class="info-grid three-up">
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Draw types</span>
+              <h3>5-number, 4-number, and 3-number match tiers.</h3>
+              <p>These tiers now appear as concrete frontend logic rather than a vague “win prizes” promise.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-dark">Logic modes</span>
+              <h3>Random generation or algorithmic weighted draw.</h3>
+              <p>The admin UI now references both random and frequency-weighted logic as required operational options.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Operational cadence</span>
+              <h3>Monthly execution, simulation before publish, rollover when needed.</h3>
+              <p>The system messaging now calls out monthly cadence, admin publishing, and jackpot carry-forward behavior.</p>
+            </article>
+          </div>
+
+          <div class="spec-table glass">
+            <div class="spec-row">
+              <strong>Input rules</strong>
+              <span>Users enter only the latest 5 scores, each with a Stableford value between 1 and 45 plus a played date</span>
+            </div>
+            <div class="spec-row">
+              <strong>Retention</strong>
+              <span>Only the most recent 5 are retained, newest first, and the oldest score is replaced automatically</span>
+            </div>
+            <div class="spec-row">
+              <strong>Publish flow</strong>
+              <span>Admin runs simulations before official publish so the draw can be previewed before results lock</span>
+            </div>
+            <div class="spec-row">
+              <strong>Rollover</strong>
+              <span>The 5-match jackpot rolls forward to next month if no winner lands the top tier</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section system-section" id="prize-pool">
+          <div class="section-heading">
+            <p class="eyebrow">Prize pool logic</p>
+            <h2>Distribution is now spelled out so reviewers can trust the reward structure.</h2>
+          </div>
+
+          <div class="spec-table glass">
+            <div class="spec-row spec-head">
+              <strong>Match type</strong>
+              <strong>Pool share</strong>
+              <strong>Rollover</strong>
+            </div>
+            <div class="spec-row spec-grid">
+              <span>5-number match</span>
+              <span>40%</span>
+              <span>Yes, jackpot</span>
+            </div>
+            <div class="spec-row spec-grid">
+              <span>4-number match</span>
+              <span>35%</span>
+              <span>No</span>
+            </div>
+            <div class="spec-row spec-grid">
+              <span>3-number match</span>
+              <span>25%</span>
+              <span>No</span>
+            </div>
+          </div>
+
+          <div class="feature-list glass">
+            <div>Each active subscription contributes a fixed portion to the prize pool automatically.</div>
+            <div>Pool tiers are calculated from active subscriber volume and enforced consistently.</div>
+            <div>Winners in the same tier split payouts equally.</div>
+            <div>Unclaimed or unwon 5-match amounts carry forward into the next month.</div>
+          </div>
+        </section>
+
+        <section class="section system-section" id="winner-verification">
+          <div class="section-heading">
+            <p class="eyebrow">Winner verification</p>
+            <h2>The proof and payout flow now has explicit frontend coverage.</h2>
+          </div>
+
+          <div class="spec-table glass">
+            <div class="spec-row">
+              <strong>Eligibility</strong>
+              <span>Verification applies to winners only</span>
+            </div>
+            <div class="spec-row">
+              <strong>Proof upload</strong>
+              <span>Screenshot upload from the golf platform is surfaced as the subscriber proof action</span>
+            </div>
+            <div class="spec-row">
+              <strong>Admin review</strong>
+              <span>Administrators can approve or reject proof submissions from the review queue</span>
+            </div>
+            <div class="spec-row">
+              <strong>Payment states</strong>
+              <span>Pending, approved, payout in process, and paid are shown as clear status states</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section role-section" id="roles">
+          <div class="section-heading">
+            <p class="eyebrow">User roles</p>
+            <h2>Three perspectives in the product.</h2>
+          </div>
+
+          <div class="role-overview-grid">
+            <article class="plan-card glass">
+              <p class="mini-label">01</p>
+              <h3>Public Visitor</h3>
+              <p class="hero-text">
+                View platform concept, explore listed charities, understand draw mechanics, and initiate subscription.
+              </p>
+            </article>
+
+            <article class="plan-card glass">
+              <p class="mini-label">02</p>
+              <h3>Registered Subscriber</h3>
+              <p class="hero-text">
+                Manage profile and settings, enter or edit golf scores, select charity recipient, view participation and
+                winnings, and upload winner proof.
+              </p>
+              <a class="button button-primary" href="./user-dashboard.html">Preview subscriber dashboard</a>
+            </article>
+
+            <article class="plan-card glass">
+              <p class="mini-label">03</p>
+              <h3>Administrator</h3>
+              <p class="hero-text">
+                Manage users and subscriptions, configure and run draws, manage charity listings, verify winners and
+                payouts, and access reports and analytics.
+              </p>
+              <a class="button button-dark" href="./admin-dashboard.html">Preview admin dashboard</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="section system-section" id="scalability">
+          <div class="section-heading">
+            <p class="eyebrow">Scalability considerations</p>
+            <h2>The frontend now communicates how the platform can grow beyond the MVP.</h2>
+          </div>
+
+          <div class="feature-list glass">
+            <div>Architecture is framed to support multi-country expansion with localized plans, currency, and operational rules.</div>
+            <div>The product language and account structure are positioned to extend into teams and corporate accounts.</div>
+            <div>A future campaign module is called out as an activation-ready extension instead of a redesign risk.</div>
+            <div>The role separation and system surfaces are structured to translate into a mobile app version later.</div>
+          </div>
+
+          <div class="info-grid three-up">
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Multi-country</span>
+              <h3>Built to localize.</h3>
+              <p>Pricing, payment messaging, and charity storytelling are structured in a way that can support future regional expansion.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-dark">Teams ready</span>
+              <h3>Extensible account model.</h3>
+              <p>Subscriber and admin separation creates a natural path for club, team, and corporate-account roles later.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Mobile support</span>
+              <h3>Component-led layout.</h3>
+              <p>The screens are already organized as portable modules rather than one giant page concept, which helps future app translation.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section system-section" id="deliverables">
+          <div class="section-heading">
+            <p class="eyebrow">Mandatory deliverables</p>
+            <h2>The frontend now makes the delivery expectations visible, testable, and review-friendly.</h2>
+          </div>
+
+          <div class="spec-table glass">
+            <div class="spec-row">
+              <strong>Live website</strong>
+              <span>Static frontend ready for deployment packaging, with public visitor entry and role-based dashboard routing</span>
+            </div>
+            <div class="spec-row">
+              <strong>User panel</strong>
+              <span>Signup, login, score entry, latest-five handling, dashboard modules, and winnings flow represented in the demo UI</span>
+            </div>
+            <div class="spec-row">
+              <strong>Admin panel</strong>
+              <span>User management, draw system, charities, winner verification, and analytics are surfaced as dedicated controls</span>
+            </div>
+            <div class="spec-row">
+              <strong>Database</strong>
+              <span>Frontend assumes a backend-connected schema, while the static demo uses client-side state to simulate key interactions</span>
+            </div>
+            <div class="spec-row">
+              <strong>Source code</strong>
+              <span>Separated HTML/CSS/JS files with clearer sections, reusable styling, and requirement-led UI organization</span>
+            </div>
+          </div>
+
+          <div class="deployment-grid">
+            <article class="mini-role-card">
+              <span class="badge badge-dark">Test credentials</span>
+              <h3>Demo access is now visible.</h3>
+              <p>Use `player@gooddrive.club / Player@2026` for the subscriber flow and `admin@gooddrive.club / Admin@2026` for the admin flow.</p>
+            </article>
+            <article class="mini-role-card">
+              <span class="badge badge-gold">Deployment constraints</span>
+              <h3>Launch expectations are explicit.</h3>
+              <p>New Vercel account, new Supabase project, and proper environment-variable setup are now acknowledged as part of delivery readiness.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

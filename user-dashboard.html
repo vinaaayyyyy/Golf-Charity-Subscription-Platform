@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good Drive Club | Registered Subscriber Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="app-body" data-page-role="user">
+    <div class="dashboard-shell">
+      <aside class="sidebar glass">
+        <a class="brand sidebar-brand" href="./index.html">
+          <span class="brand-mark">GD</span>
+          <span>
+            <strong>Registered Subscriber</strong>
+            <small>Subscriber dashboard</small>
+          </span>
+        </a>
+
+        <nav class="sidebar-nav">
+          <a class="is-current" href="./user-dashboard.html">Overview</a>
+          <a href="./user-dashboard.html">My scores</a>
+          <a href="./user-dashboard.html">Subscription</a>
+          <a href="./user-dashboard.html">Winnings</a>
+          <a href="./user-dashboard.html">Charity settings</a>
+          <a href="./auth.html" data-logout>Logout</a>
+        </nav>
+      </aside>
+
+      <main class="dashboard-main">
+        <header class="dashboard-header glass">
+          <div>
+            <p class="eyebrow">Registered subscriber</p>
+            <h1>Welcome back, <span id="subscriberName">Samira</span>.</h1>
+            <p class="hero-text">Track your latest five scores, manage your membership, and monitor winnings and claims.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <a class="button button-ghost" href="./index.html">Back to landing</a>
+            <a class="button button-primary" href="./auth.html">Switch account</a>
+          </div>
+        </header>
+
+        <section class="dashboard-grid app-kpis">
+          <article class="metric-card glass">
+            <span>Subscription status</span>
+            <strong id="subscriptionStatusValue">Active</strong>
+            <small id="subscriptionStatusMeta">Momentum Monthly · renewal date 01 Apr 2026</small>
+          </article>
+          <article class="metric-card glass">
+            <span>Participation summary</span>
+            <strong id="participationHeading">April 2026</strong>
+            <small id="participationMeta">Upcoming draw · 7 draws entered</small>
+          </article>
+          <article class="metric-card glass">
+            <span>Winnings overview</span>
+            <strong id="winningsTotalValue">₹3,350</strong>
+            <small id="paymentStatusMeta">Current payment status: payout in process</small>
+          </article>
+        </section>
+
+        <section class="app-grid-two">
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Subscription lifecycle and access control</h3>
+              <span class="badge badge-dark">Validated each session</span>
+            </div>
+            <div class="table-list">
+              <div><span>Current state</span><strong id="subscriptionStateDetail">Active</strong></div>
+              <div><span>Renewal due</span><strong id="renewalDateDetail">01 Apr 2026</strong></div>
+              <div><span>Cancellation status</span><strong id="cancellationStatusDetail">Not scheduled</strong></div>
+              <div><span>Restricted mode trigger</span><strong>Inactive or lapsed plan</strong></div>
+            </div>
+            <div class="feature-list compact">
+              <div>Non-subscribers lose access to score entry, draw participation, and winnings actions.</div>
+              <div>Renewal, cancellation, inactive, and lapsed states are expected lifecycle UI states.</div>
+            </div>
+            <div class="control-stack">
+              <label class="control-label" for="subscriptionStatusSelect">
+                Switch subscription state
+                <select id="subscriptionStatusSelect">
+                  <option value="active">Active</option>
+                  <option value="renewal_due">Renewal due</option>
+                  <option value="cancellation_scheduled">Cancellation scheduled</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="lapsed">Lapsed</option>
+                </select>
+              </label>
+              <button class="button button-primary button-small" id="applySubscriptionStatusButton" type="button">Apply status</button>
+            </div>
+          </article>
+
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Draw and prize logic</h3>
+              <span class="badge badge-gold">Monthly cadence</span>
+            </div>
+            <div class="table-list">
+              <div><span>Draw types</span><strong>5-match, 4-match, 3-match</strong></div>
+              <div><span>Prize shares</span><strong>40% / 35% / 25%</strong></div>
+              <div><span>5-match rollover</span><strong>Enabled if unwon</strong></div>
+              <div><span>Draw basis</span><strong>Latest five scores only</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="app-grid-two">
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Score entry and edit interface</h3>
+              <span class="badge badge-gold">5/5 stored</span>
+            </div>
+            <form class="score-form">
+              <label>
+                Stableford score
+                <input id="scoreInput" type="number" value="24" min="1" max="45" />
+              </label>
+              <label>
+                Date played
+                <input id="scoreDateInput" type="date" value="2026-03-24" />
+              </label>
+              <button class="button button-primary button-small" id="saveScoreButton" type="button">Save score</button>
+            </form>
+            <div class="score-balls large" id="scoreBallsList">
+              <span>12</span>
+              <span>18</span>
+              <span>23</span>
+              <span>33</span>
+              <span>41</span>
+            </div>
+            <div class="editable-score-list" id="editableScoreList"></div>
+            <div class="inline-feedback" id="scoreFeedback">Only the latest 5 scores are retained in reverse chronological order.</div>
+          </article>
+
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Selected charity and contribution percentage</h3>
+              <span class="status-dot">Active</span>
+            </div>
+            <div class="table-list">
+              <div><span>Selected charity</span><strong id="selectedCharityValue">First Swing Futures</strong></div>
+              <div><span>Contribution tier</span><strong id="contributionTierValue">20%</strong></div>
+              <div><span>Billing cadence</span><strong id="billingCadenceValue">Monthly</strong></div>
+              <div><span>Renewal date</span><strong>01 Apr 2026</strong></div>
+              <div><span>Status</span><strong id="subscriptionStateSummaryValue">Active</strong></div>
+            </div>
+            <div class="control-stack">
+              <label class="control-label" for="charitySelect">
+                Select charity
+                <select id="charitySelect">
+                  <option value="First Swing Futures">First Swing Futures</option>
+                  <option value="Blue Horizon Water Fund">Blue Horizon Water Fund</option>
+                  <option value="Healing Greens Recovery Trust">Healing Greens Recovery Trust</option>
+                </select>
+              </label>
+              <label class="control-label" for="contributionSelect">
+                Contribution percentage
+                <select id="contributionSelect">
+                  <option value="10">10%</option>
+                  <option value="15">15%</option>
+                  <option value="20" selected>20%</option>
+                  <option value="25">25%</option>
+                  <option value="30">30%</option>
+                </select>
+              </label>
+              <label class="control-label" for="billingCadenceSelect">
+                Billing cadence
+                <select id="billingCadenceSelect">
+                  <option value="Monthly" selected>Monthly</option>
+                  <option value="Yearly">Yearly</option>
+                </select>
+              </label>
+            </div>
+            <div class="action-row">
+              <button class="button button-primary button-small" id="updatePreferencesButton" type="button">Update preferences</button>
+              <button class="button button-ghost button-small" id="manageBillingButton" type="button">Manage billing</button>
+            </div>
+            <div class="inline-feedback" id="preferencesFeedback">Subscriber settings can be updated here.</div>
+          </article>
+        </section>
+
+        <section class="app-grid-two">
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Participation summary</h3>
+              <span class="badge badge-dark">7 draws entered</span>
+            </div>
+            <div class="table-list">
+              <div><span>Draws entered</span><strong id="drawsEnteredValue">7</strong></div>
+              <div><span>Upcoming draw</span><strong id="upcomingDrawValue">April 2026</strong></div>
+              <div><span>Eligibility</span><strong id="eligibilityValue">Confirmed</strong></div>
+              <div><span>Current five-score set</span><strong id="scoreSetValidityValue">Valid</strong></div>
+            </div>
+            <p>The dashboard keeps participation visible so subscribers always understand where they stand in the monthly cycle.</p>
+          </article>
+
+          <article class="detail-card glass">
+            <div class="detail-head">
+              <h3>Winnings overview</h3>
+              <span class="status-dot">Approved</span>
+            </div>
+            <div class="claim-row">
+              <div>
+                <span>February 2026</span>
+                <strong>3-match tier</strong>
+              </div>
+              <strong>₹3,350</strong>
+            </div>
+            <div class="table-list">
+              <div><span>Total won</span><strong id="winningsDetailValue">₹3,350</strong></div>
+              <div><span>Current payment status</span><strong id="paymentStatusValue">Payout in process</strong></div>
+              <div><span>Matched numbers</span><strong id="matchedNumbersValue">12, 18, 23</strong></div>
+            </div>
+            <div class="proof-box">
+              <strong>Winner proof upload</strong>
+              <p>Upload screenshot proof from the golf platform. Verification applies only to winning entries.</p>
+              <div class="action-row">
+                <button class="button button-dark button-small" id="chooseScreenshotButton" type="button">Choose screenshot</button>
+                <button class="button button-ghost button-small" id="proofStatusButton" type="button">Pending review</button>
+              </div>
+            </div>
+            <p>Subscribers can review total won and current payment status, then upload winner proof if needed.</p>
+            <div class="action-row">
+              <button class="button button-dark button-small" id="uploadProofButton" type="button">Upload proof</button>
+              <button class="button button-ghost button-small" id="viewHistoryButton" type="button">View history</button>
+            </div>
+            <div class="inline-feedback" id="proofFeedback">Proof status updates will appear here.</div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
