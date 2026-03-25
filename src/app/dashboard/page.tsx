@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import {
   deleteScoreAction,
   demoSubscriptionAction,
@@ -10,19 +9,16 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { isDemoMode } from "@/lib/env";
 import { getAvailableCharities, getDashboardSnapshot } from "@/lib/platform";
-import { getCurrentViewer } from "@/lib/session";
+import { requireViewer } from "@/lib/session";
 import { formatCurrency, formatDate, formatMonthLabel } from "@/lib/utils";
 
 export default async function DashboardPage() {
-  const viewer = await getCurrentViewer();
-
-  if (!viewer) {
-    notFound();
-  }
-
-  const snapshot = getDashboardSnapshot(viewer);
-  const charities = getAvailableCharities();
+  const viewer = await requireViewer();
+  const snapshot = await getDashboardSnapshot(viewer);
+  const charities = await getAvailableCharities();
+  const demoMode = isDemoMode();
 
   return (
     <div className="section-shell space-y-8 py-14 md:py-20">
@@ -64,28 +60,34 @@ export default async function DashboardPage() {
           <p className="text-sm leading-7 text-muted">
             Your account still has dashboard visibility, but score entry, draw participation, and claim submission stay locked until billing is active again.
           </p>
-          <form action={demoSubscriptionAction} className="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
-            <label className="grid gap-2 text-sm font-medium">
-              Plan cadence
-              <select name="cadence" className="h-12 rounded-2xl border border-line bg-white px-4 outline-none">
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </label>
-            <label className="grid gap-2 text-sm font-medium">
-              Charity tier
-              <select name="charityTier" defaultValue={String(viewer.profile.charityTier)} className="h-12 rounded-2xl border border-line bg-white px-4 outline-none">
-                {[10, 15, 20, 25, 30].map((tier) => (
-                  <option key={tier} value={tier}>
-                    {tier}%
-                  </option>
-                ))}
-              </select>
-            </label>
-            <button className="mt-auto h-12 rounded-full bg-primary px-6 font-medium text-white">
-              Reactivate
-            </button>
-          </form>
+          {demoMode ? (
+            <form action={demoSubscriptionAction} className="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+              <label className="grid gap-2 text-sm font-medium">
+                Plan cadence
+                <select name="cadence" className="h-12 rounded-2xl border border-line bg-white px-4 outline-none">
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </label>
+              <label className="grid gap-2 text-sm font-medium">
+                Charity tier
+                <select name="charityTier" defaultValue={String(viewer.profile.charityTier)} className="h-12 rounded-2xl border border-line bg-white px-4 outline-none">
+                  {[10, 15, 20, 25, 30].map((tier) => (
+                    <option key={tier} value={tier}>
+                      {tier}%
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button className="mt-auto h-12 rounded-full bg-primary px-6 font-medium text-white">
+                Reactivate
+              </button>
+            </form>
+          ) : (
+            <Link href="/pricing" className={buttonStyles({ variant: "primary", size: "md" })}>
+              Go to pricing to reactivate
+            </Link>
+          )}
         </Card>
       ) : null}
 
@@ -256,6 +258,7 @@ export default async function DashboardPage() {
                         <input
                           type="file"
                           name="proof"
+                          required
                           className="h-11 rounded-2xl border border-line bg-white px-4 py-2 text-sm"
                         />
                         <button className="h-11 rounded-full bg-foreground px-5 text-sm font-medium text-background">

@@ -8,11 +8,11 @@ export const buttonStyles = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary text-white shadow-[0_16px_30px_rgba(235,125,79,0.28)] hover:bg-primary-strong hover:-translate-y-0.5",
+          "bg-primary text-white shadow-[0_16px_30px_rgba(235,125,79,0.28)] hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-[0_22px_44px_rgba(235,125,79,0.34)] active:translate-y-0",
         secondary:
-          "border border-line-strong bg-white/80 text-foreground hover:border-secondary hover:bg-secondary-soft/60",
-        ghost: "text-foreground hover:bg-white/70",
-        dark: "bg-foreground text-background hover:bg-black/80",
+          "border border-line-strong bg-white/80 text-foreground hover:-translate-y-0.5 hover:border-secondary hover:bg-secondary-soft/60 hover:shadow-[0_16px_28px_rgba(32,94,93,0.14)] active:translate-y-0",
+        ghost: "text-foreground hover:-translate-y-0.5 hover:bg-white/70 active:translate-y-0",
+        dark: "bg-foreground text-background hover:-translate-y-0.5 hover:bg-black/80 hover:shadow-[0_18px_36px_rgba(30,29,24,0.18)] active:translate-y-0",
       },
       size: {
         sm: "h-10 px-4 text-sm",

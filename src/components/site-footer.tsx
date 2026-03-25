@@ -24,6 +24,9 @@ export function SiteFooter() {
           <Link href="/how-it-works" className="block hover:text-foreground">
             Draw mechanics
           </Link>
+          <Link href="/admin/login" className="block hover:text-foreground">
+            Admin login
+          </Link>
         </div>
         <div className="space-y-3 text-sm text-muted">
           <p className="font-semibold uppercase tracking-[0.22em] text-foreground">Demo Access</p>

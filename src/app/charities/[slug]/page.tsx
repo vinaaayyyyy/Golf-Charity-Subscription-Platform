@@ -12,7 +12,7 @@ export default async function CharityDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const snapshot = getCharityPageSnapshot(slug);
+  const snapshot = await getCharityPageSnapshot(slug);
 
   if (!snapshot) {
     notFound();

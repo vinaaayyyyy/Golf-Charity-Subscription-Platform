@@ -61,6 +61,9 @@ export async function SiteHeader() {
               <Link href="/sign-in" className="hidden text-sm font-medium text-muted hover:text-foreground sm:block">
                 Sign in
               </Link>
+              <Link href="/admin/login" className="hidden text-sm font-medium text-muted hover:text-foreground lg:block">
+                Admin
+              </Link>
               <Link href="/pricing" className={cn(buttonStyles({ variant: "primary", size: "sm" }))}>
                 Subscribe
               </Link>

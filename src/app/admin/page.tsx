@@ -1,4 +1,10 @@
-import { adminDeleteUserAction, adminResyncSubscriptionAction, publishDrawAction, reviewClaimAction } from "@/app/actions";
+import {
+  adminCreateAccountAction,
+  adminDeleteUserAction,
+  adminResyncSubscriptionAction,
+  publishDrawAction,
+  reviewClaimAction,
+} from "@/app/actions";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { getAdminSnapshot, simulateMonthlyDraw } from "@/lib/platform";
@@ -8,11 +14,17 @@ import { formatCurrency, formatDate, formatMonthLabel, toMonthKey } from "@/lib/
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ mode?: "random" | "algorithmic"; bias?: "most_frequent" | "least_frequent"; preview?: string }>;
+  searchParams: Promise<{
+    mode?: "random" | "algorithmic";
+    bias?: "most_frequent" | "least_frequent";
+    preview?: string;
+    status?: string;
+    error?: string;
+  }>;
 }) {
   const viewer = await requireAdmin();
   const params = await searchParams;
-  const snapshot = getAdminSnapshot();
+  const snapshot = await getAdminSnapshot();
   const preview =
     params.preview === "1"
       ? simulateMonthlyDraw({
@@ -24,6 +36,16 @@ export default async function AdminPage({
 
   return (
     <div className="section-shell space-y-8 py-14 md:py-20">
+      {params.status ? (
+        <Card className="border border-success/20 bg-success/8 py-4 text-sm text-success">
+          Admin action completed: {params.status.replaceAll("-", " ")}.
+        </Card>
+      ) : null}
+      {params.error ? (
+        <Card className="border border-danger/20 bg-danger/8 py-4 text-sm text-danger">
+          Admin action failed: {params.error.replaceAll("-", " ")}.
+        </Card>
+      ) : null}
       <Card className="mesh-card space-y-4">
         <Badge tone="warning">Administrator control center</Badge>
         <h1 className="display-font text-4xl font-semibold sm:text-5xl">
@@ -220,13 +242,7 @@ export default async function AdminPage({
                     </button>
                   </form>
                 ) : null}
-                <form
-                  action={adminDeleteUserAction}
-                  className="mt-2"
-                  onSubmit={(e) => {
-                    if (!confirm(`Remove ${user.profile.fullName} permanently?`)) e.preventDefault();
-                  }}
-                >
+                <form action={adminDeleteUserAction} className="mt-2">
                   <input type="hidden" name="profileId" value={user.profile.id} />
                   <button className="text-sm font-medium text-danger">
                     Remove user
@@ -238,7 +254,59 @@ export default async function AdminPage({
         </Card>
 
         <Card className="space-y-5">
-          <h2 className="display-font text-3xl font-semibold">Charities and recent audit trail</h2>
+          <h2 className="display-font text-3xl font-semibold">Team management</h2>
+          <form action={adminCreateAccountAction} className="grid gap-4 rounded-[1.5rem] bg-white/80 p-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="grid gap-2 text-sm font-medium">
+                Full name
+                <input name="fullName" className="h-12 rounded-2xl border border-line bg-white px-4 outline-none" required />
+              </label>
+              <label className="grid gap-2 text-sm font-medium">
+                Email
+                <input name="email" type="email" className="h-12 rounded-2xl border border-line bg-white px-4 outline-none" required />
+              </label>
+            </div>
+            <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+              <label className="grid gap-2 text-sm font-medium">
+                Password
+                <input name="password" type="password" className="h-12 rounded-2xl border border-line bg-white px-4 outline-none" required />
+              </label>
+              <label className="grid gap-2 text-sm font-medium">
+                Role
+                <select name="role" defaultValue="admin" className="h-12 rounded-2xl border border-line bg-white px-4 outline-none">
+                  <option value="admin">Admin</option>
+                  <option value="subscriber">Subscriber</option>
+                </select>
+              </label>
+              <button className="mt-auto h-12 rounded-full bg-primary px-6 font-medium text-white">
+                Create account
+              </button>
+            </div>
+          </form>
+          <div className="space-y-3">
+            {snapshot.admins.map((item) => (
+              <div key={item.profile.id} className="rounded-[1.5rem] border border-line bg-white/80 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-muted">{item.profile.email}</p>
+                    <p className="mt-2 text-xl font-semibold">{item.profile.fullName}</p>
+                  </div>
+                  <Badge tone="success">admin</Badge>
+                </div>
+                <p className="mt-3 text-sm text-muted">
+                  {("account" in item && item.account?.password)
+                    ? `Demo password: ${item.account.password}`
+                    : "Provisioned through Supabase Auth."}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
+        <Card className="space-y-5">
+          <h2 className="display-font text-3xl font-semibold">Charities</h2>
           <div className="space-y-3">
             {snapshot.charities.map((charity) => (
               <div key={charity.id} className="rounded-[1.5rem] border border-line bg-white/80 p-4">
@@ -253,6 +321,10 @@ export default async function AdminPage({
               </div>
             ))}
           </div>
+        </Card>
+
+        <Card className="space-y-5">
+          <h2 className="display-font text-3xl font-semibold">Recent audit trail</h2>
           <div className="rounded-[1.5rem] bg-secondary p-5 text-white">
             <p className="text-xs uppercase tracking-[0.22em] text-white/60">Recent admin actions</p>
             <div className="mt-4 space-y-3 text-sm text-white/85">
